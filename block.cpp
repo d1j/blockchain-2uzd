@@ -66,6 +66,10 @@ string block::mineBlock()
 
 void block::t_printBlock()
 {
+	if (nonce == -1)
+	{
+		timeStamp = 0;
+	}
 	std::cout << "BLOCK INDEX: " << blockIndex << std::endl
 			  << "Version: " << version << std::endl
 			  << "Previous block hash: " << prevHash << std::endl
@@ -74,7 +78,12 @@ void block::t_printBlock()
 			  << "Time stamp: " << std::to_string(timeStamp) << std::endl
 			  << "Block Hash: " << blockHash << std::endl
 			  << "Data: \n";
-	/*for (int i = 0; i < transactionList.size(); i++) {
+	/*
+	string a;
+	for (int i = 0; i < transactionList.size(); i++)
+	{
 		cout << transactionList[i].toString();
-	}*/
+	}
+	cin >> a;
+	*/
 }

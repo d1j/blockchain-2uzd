@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <fstream>
 
+//distributor hash = janHash(std::to_string(-1))
+
 struct user
 {
 	string key;
@@ -11,24 +13,24 @@ struct user
 	user(string _key, double _ammount) : key(_key), ammount(_ammount) {}
 };
 
-void generateUsers(string outputFileName, int numUsers)
+void generateUsers(string outputFileName, int numUsers, double maxBalanceSize)
 {
 	std::ofstream output(outputFileName);
-	for (int i = 0; i < numUsers; i++)
+	for (int i = 0; i <= numUsers; i++)
 	{
-		if (i == numUsers - 1)
+		if (i == numUsers)
 		{
-			output << janHash(std::to_string(i)) << " " << gen_reiksm(100, 1000000);
+			output << janHash(std::to_string(i)) << " " << gen_reiksm(100, maxBalanceSize);
 		}
 		else
 		{
-			output << janHash(std::to_string(i)) << " " << gen_reiksm(100, 1000000) << std::endl;
+			output << janHash(std::to_string(i)) << " " << gen_reiksm(100, maxBalanceSize) << std::endl;
 		}
 	}
 	output.close();
 }
 
-void generateTransactions(string inputFileName, string outputFileName, int numTransactions)
+void generateTransactions(string inputFileName, string outputFileName, int numTransactions, double maxTransSize)
 {
 	std::ifstream input(inputFileName);
 	std::vector<user> users;
@@ -57,11 +59,11 @@ void generateTransactions(string inputFileName, string outputFileName, int numTr
 		}
 		if (i == numTransactions - 1)
 		{
-			output << sender << " " << receiver << " " << gen_reiksm(1, 10000);
+			output << sender << " " << receiver << " " << gen_reiksm(1, maxTransSize);
 		}
 		else
 		{
-			output << sender << " " << receiver << " " << gen_reiksm(1, 10000) << endl;
+			output << sender << " " << receiver << " " << gen_reiksm(1, maxTransSize) << endl;
 		}
 	}
 	output.close();
