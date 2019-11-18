@@ -24,7 +24,7 @@ string block::blockToString()
 				 prevHash + '\n' +
 				 std::to_string(difficulty) + '\n' +
 				 std::to_string(nonce) + '\n' +
-				 std::to_string(timeStamp) + '\n';
+				 merkle + '\n';
 	for (int i = 0; i < transactionList.size(); i++)
 	{
 		str += transactionList[i].toString();
@@ -38,6 +38,50 @@ void block::addTransaction(transaction trans)
 	transactionList.push_back(trans);
 }
 
+void block::computeMerkle()
+{
+	std::vector<string> _merkle;
+
+	for (auto it = transactionList.begin(); it != transactionList.end(); it++)
+	{
+		_merkle.push_back((*it).getID());
+	}
+
+	if (_merkle.size() == 0)
+	{
+		merkle = "00000000000000000000000000000000";
+		return;
+	}
+	else if (_merkle.size() == 1)
+	{
+		merkle = _merkle[0];
+		return;
+	}
+	//cout << "MERKLE\n";
+
+	while (_merkle.size() > 1)
+	{
+		//cout << "\n\n";
+
+		if (_merkle.size() % 2 != 0)
+			_merkle.push_back(_merkle.back());
+
+		std::vector<string> _newMerkle;
+
+		for (auto it = _merkle.begin(); it != _merkle.end(); it += 2)
+		{
+			string concat = (*it) + (*(it + 1));
+			string newHash = janHash(concat);
+			_newMerkle.push_back(newHash);
+			//cout << newHash << std::endl;
+		}
+
+		_merkle = _newMerkle;
+	}
+	merkle = _merkle[0];
+	return;
+}
+
 string block::mineBlock()
 {
 	string diffString = "";
@@ -47,16 +91,19 @@ string block::mineBlock()
 		diffString += "0";
 	}
 
+	//compute merkle
+	computeMerkle();
+
 	auto start = high_resolution_clock::now();
 	do
 	{
 		nonce++;
-		timeStamp = time(0);
 		blockHash = janHash(blockToString());
 	} while (blockHash.substr(0, difficulty) != diffString);
 
 	auto end = high_resolution_clock::now();
 	duration<double> diff = end - start;
+	timeStamp = time(0);
 	cout << "Block " << blockIndex << " mined in: " << diff.count() << endl
 		 << blockHash << endl
 		 << endl;
@@ -77,9 +124,11 @@ void block::t_printBlock()
 			  << "Nonce: " << nonce << std::endl
 			  << "Time stamp: " << std::to_string(timeStamp) << std::endl
 			  << "Block Hash: " << blockHash << std::endl
+			  << "Merkle root hash: " << merkle << std::endl
 			  << "Data: \n";
-	/*
+
 	string a;
+	/*
 	for (int i = 0; i < transactionList.size(); i++)
 	{
 		cout << transactionList[i].toString();

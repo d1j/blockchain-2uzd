@@ -10,12 +10,12 @@ int main()
 	double maxBalanceSize = 10000;
 	double maxTransSize = 10000;
 	int maxNumTransactionsInABlock = 10;
-	int difficulty = 2;
+	int difficulty = 4;
 	int numUsers = 5;
-	int numTransactions = 20;
+	int numTransactions = 123;
 
-	generateUsers(usersFileName, numUsers, maxBalanceSize);
-	generateTransactions(usersFileName, transFileName, numTransactions, maxTransSize);
+	//generateUsers(usersFileName, numUsers, maxBalanceSize);
+	//generateTransactions(usersFileName, transFileName, numTransactions, maxTransSize);
 
 	blockchain BC(transFileName, difficulty, maxNumTransactionsInABlock);
 

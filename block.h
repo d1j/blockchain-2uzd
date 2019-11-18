@@ -41,6 +41,11 @@ public:
 		return receiver;
 	}
 
+	string getID()
+	{
+		return id;
+	}
+
 	double getAmmount()
 	{
 		return ammount;
@@ -60,8 +65,11 @@ private:
 	string blockHash;
 	int numTransactions;
 	int maxNumTransactions;
+	string merkle;
 
 	string blockToString();
+
+	void computeMerkle();
 
 public:
 	block(long long index, string _prevBlockHash, int _difficulty, string _version, int _maxNumTransactions);
